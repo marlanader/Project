@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 using namespace std;
-uint32_t regs[31],s1data, s2data,aluresult, memory[127];
+uint32_t regs[14],s1data, s2data,aluresult, memory[31];
 int zeroflag=0,datamemresult;
 
 
@@ -16,7 +16,7 @@ vector <BranchPredictor> branch;
 
 void Registersreset()                              //initialize all registers to 0
 {
-	for (int i = 0; i < 32; i++)
+	for (int i = 0; i < 16; i++)
 	{
 		regs[i] = 0;
 	}
@@ -25,12 +25,12 @@ void Registersreset()                              //initialize all registers to
 void RegisterFile (uint32_t rs, uint32_t rt, uint32_t rd, uint32_t w_data, bool regwrite)    //Read and Write from registers
 {
 	
-	if ((regwrite) && (rd<32) && (rd>=0))
+	if ((regwrite) && (rd<16) && (rd>=0))
 	{
 		regs[rd] = w_data;                                    //Write
 	}
 	else
-		if (!(regwrite) && (rs<32) && (rt<32))
+		if (!(regwrite) && (rs<16) && (rt<16))
 	{
 			s1data = regs[rs];                             //Read
 			s2data = regs[rt];
@@ -60,21 +60,21 @@ void ALU(uint32_t operand1, uint32_t operand2, uint32_t shamt, int alucontrol)
 
 void datamemoryreset()                   //initialize all the values in the memory to 0
 {
-	for (int i = 0; i < 128; i++)
+	for (int i = 0; i < 32; i++)
 	{
 		memory[i] = 0;
 	}
 }
 void datamemory(uint32_t address, uint32_t data, bool memorywrite)             //Read and Write in memory, memory size is 128
 {
-	if ((memorywrite) && (address < 128) && (address >= 0))        //write 
+	if ((memorywrite) && (address < 32) && (address >= 0))        //write 
 	{
 		memory[address] = data;
 		
 	}
 
 	else
-		if (!(memorywrite) && (address<128) && (address>=0))          //Read
+		if (!(memorywrite) && (address<32) && (address>=0))          //Read
 	{
 			datamemresult = memory[address];
 	}
