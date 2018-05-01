@@ -2,11 +2,16 @@
 #include <string>
 #include <vector>
 using namespace std;
-uint32_t regs[14],s1data, s2data,aluresult, memory[31],opcode,RS,RT,RD,func,imm,instruction;
+uint32_t regs[15],s1data, s2data,aluresult, memory[32],opcode,RS,RT,RD,func,imm,instruction;
 int zeroflag=0,datamemresult,alucontrol;
 bool regwrite,regdst,ALUSrc,Branch,memorywrite,memtoreg,jump, Branchequal;
 
-
+struct instructionmemory
+{
+	uint32_t address;
+	uint32_t instr;
+};
+vector <instructionmemory> instr;
 struct BranchPredictor
 {
 	uint32_t pc;
@@ -15,9 +20,28 @@ struct BranchPredictor
 };
 vector <BranchPredictor> branch;
 
+void instructionmemoryinitialize(uint32_t ad, uint32_t ins)
+{
+	instructionmemory addedinstruction;
+	addedinstruction.address = ad;          //adding the address of the instruction
+	addedinstruction.instr= ins;        //adding the instruction itself
+	instr.push_back(addedinstruction);          
+}
+uint32_t returninstruction(uint32_t ad)
+{
+	
+	for (int i = 0; i < instr.size(); i++)
+	{
+		if (instr[i].address == ad)
+		{
+			instruction = instr[i].instr;
+			break;
+		}
+	}
+}
 void Registersreset()                              //initialize all registers to 0
 {
-	for (int i = 0; i < 16; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		regs[i] = 0;
 	}
@@ -207,9 +231,28 @@ void control_unit()
 	}
 	}
 }
+bool stall(uint32_t rs1_ex, uint32_t rs2_ex, uint32_t rs2_df, bool memtoreg_df, uint32_t rs2_ds, bool memtoreg_ds)   //gets the decision whether to stall or continue
+{
+	if (memtoreg_df) {
+		if (rs1_ex == rs2_df || rs2_ex == rs2_df)
+			if (rs2_df!= 0)
+				return true;
+	}
+	if (memtoreg_ds) {
+		if (rs1_ex == rs2_ds || rs2_ex == rs2_ds)
+			if (rs2_ds != 0)
+				return true;
+	}
+
+	return false;
+}
+
+
+
 int main()
 {
-	
+	instruction = 5;
+
 	system("pause");
 
 }
