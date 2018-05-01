@@ -104,7 +104,7 @@ void datamemoryreset()                   //initialize all the values in the memo
 		memory[i] = 0;
 	}
 }
-void datamemory(uint32_t address, uint32_t data)             //Read and Write in memory, memory size is 128
+void datamemory(uint32_t address, uint32_t data)             //Read and Write in memory, memory size is 32
 {
 	if ((memorywrite) && (address < 32) && (address >= 0))        //write 
 	{
